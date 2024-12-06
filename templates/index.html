@@ -3,39 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Reverse ME</title>
   </head>
 
   <body>
-    <h1>Upload a .exe File</h1>
-    <form id="form">
-      <input type="file" name="file" accept=".exe" />
-      <br /><br />
-      <input type="submit" />
-    </form>
-    <pre style="background-color:rgb(230, 230, 230);">
+    <div
+      class="mx-auto mt-10 border-4 rounded-lg truncate border-violet-300"
+      style="width: 500px; height: auto"
+    >
+      <h1 class="text-3xl font-semibold justify-center m-3" align="center">
+        Upload a .EXE File!!
+      </h1>
+      <form id="form" class="m-3" align="center">
+        <input type="file" name="file" />
+        <input
+          type="submit"
+          class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-md font-semibold text-white shadow-sm hover:bg-indigo-400"
+        />
+      </form>
+      <pre style="background-color: rgb(230, 230, 230)">
+      <span id="proc-txt"></span>
       <code>
         {{.Output}}
       </code>
     </pre>
+    </div>
 
     <script>
-      document.getElementById('form').addEventListener('submit', async (event) => {
-        event.preventDefault();
+      document
+        .getElementById("form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
 
-        const form = event.target;
-        const formData = new FormData(form);
+          const form = event.target;
+          const formData = new FormData(form);
 
-        const res = await fetch("http://localhost:8080/gimmeEXE", {
-          method: 'POST',
-          headers: { 'Content-Type': 'multipart/form-data', },
-          body: fromData,
+          document.getElementById("proc-txt").innerHTML = "Compiling...";
+
+          const res = await fetch("/gimmeEXE", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!res.ok) {
+            const err = await res.text();
+            document.getElementById("proc-txt").innerHTML = null;
+            alert(err);
+          } else {
+            window.location = window.location.href;
+          }
         });
-
-        if (res.ok) {
-          console.log.(res)
-        }
-      })
     </script>
   </body>
 </html>

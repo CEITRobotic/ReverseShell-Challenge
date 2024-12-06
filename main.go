@@ -7,12 +7,13 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os/exec"
 	"os"
+	"os/exec"
 	"path/filepath"
 )
 
 const port string = ":8080"
+
 var output string
 
 func main() {
@@ -22,7 +23,7 @@ func main() {
 			http.Error(w, "Server Error", http.StatusInternalServerError)
 			return
 		}
-		t.Execute(w, map[string]string{"Output": output,})
+		t.Execute(w, map[string]string{"Output": output})
 	})
 
 	http.HandleFunc("/gimmeEXE", func(w http.ResponseWriter, r *http.Request) {
@@ -33,13 +34,13 @@ func main() {
 
 		file, handler, err := r.FormFile("file")
 		if err != nil {
-			http.Error(w, "Are you forget some file BURH~~", http.StatusBadRequest)
+			http.Error(w, "Did you forget some file BURH~~", http.StatusBadRequest)
 			return
 		}
 		defer file.Close()
 
 		if filepath.Ext(handler.Filename) != ".exe" {
-			http.Error(w, "Do you see name of URL on top -_-", http.StatusBadRequest)
+			http.Error(w, "Did you see a Topic -_-", http.StatusBadRequest)
 			return
 		}
 
@@ -49,7 +50,7 @@ func main() {
 			return
 		}
 
-		tempFile, err := os.CreateTemp("./", "temp_*.exe") 
+		tempFile, err := os.CreateTemp("./", "temp_*.exe")
 		if err != nil {
 			http.Error(w, "Error creating temporary file", http.StatusInternalServerError)
 			return
@@ -75,7 +76,7 @@ func main() {
 			return
 		}
 
-		output = fmt.Sprintf("%s", outBuffer.String())
+		output = fmt.Sprint(outBuffer.String())
 
 		w.Header().Set("Content-Type", "text/html")
 		w.Write([]byte(output))
